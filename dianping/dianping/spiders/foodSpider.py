@@ -15,7 +15,9 @@ class DpshopsSpider(CrawlSpider):
     allowed_domains = ['dianping.com']
     website = 'http://www.dianping.com'
     start_urls = [
-        'http://www.dianping.com/search/category/17/0'
+        'http://www.dianping.com/search/category/17/10/g110r129',
+        'http://www.dianping.com/search/category/17/10/g132r129',
+        'http://www.dianping.com/search/category/17/10/g112r129',
     ]
     id = 1
 
@@ -46,8 +48,6 @@ class DpshopsSpider(CrawlSpider):
         status_code = response.status
         if status_code == 403:  #当爬虫被禁时，关闭爬虫
             raise CloseSpider('========   SPIDER WAS FORBIDDEN  =========')
-
-        htmlData = Selector(response)
 
         shop['shop_name'] = response.xpath('//h1[@class="shop-name"]/text()').extract()
         shop['street_address'] = response.xpath('//span[@itemprop="street-address"]/text()').extract()
