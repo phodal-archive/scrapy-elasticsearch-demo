@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from scrapy.exceptions import DropItem
-from pyelasticsearch import ElasticSearch
 
 import codecs
 import json
