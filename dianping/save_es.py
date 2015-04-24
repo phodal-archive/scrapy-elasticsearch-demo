@@ -14,11 +14,17 @@ index = 0
 
 for line in file.readlines():
     data = json.loads(line)
-    data["shop_tel"] = data["shop_tel"].split(",")
-    data["location"] = [data["shop_lng"], data["shop_lat"]]
+    data.pop("id")
+    data["shop_tel"] = re.sub(" +", ",", data["shop_tel"])
+    data["shop_tel"] = data["shop_tel"].encode("utf8").replace("电话：", "").split(",")[1:]
+
+    data["location"] = re.sub(" +", ",", data["location"])
+
     data["shop_tags"] = re.sub("\(\d+\)", "", data["shop_tags"])
-    data["shop_tags"] = data["shop_tags"].encode("utf8").replace("分类标签：,", "").split(",")
-    data.pop('shop_lng')
-    data.pop('shop_lat')
+    data["shop_tags"] = re.sub(" +", ",", data["shop_tags"])
+    data["shop_tags"] = data["shop_tags"].encode("utf8").replace("分类标签：,", "").split(",")[:-1]
+
+    data["open_time"] = re.sub(" +", "", data["open_time"])
+    data["open_time"] = data["open_time"].encode("utf8").replace("营业时间：", "").replace("添加", "").replace("修改", "").replace("：",":")
     index += 1
     es.index('dianping', 'food', data, id=index)

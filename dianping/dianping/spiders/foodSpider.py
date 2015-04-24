@@ -19,7 +19,6 @@ class DpshopsSpider(CrawlSpider):
         'http://www.dianping.com/search/category/17/10/g132r129',
         'http://www.dianping.com/search/category/17/10/g112r129',
     ]
-    id = 1
 
     rules = (
         Rule(LinkExtractor(allow=r'/17/0[p0-9]*'), callback='parse_shop_list', follow=True),
@@ -42,8 +41,6 @@ class DpshopsSpider(CrawlSpider):
     def parse_shop(self, response):
         shop = ShopsItem()
         shop_url = response.url
-        self.id += 1
-        shop['id'] = str(self.id)
 
         status_code = response.status
         if status_code == 403:  #当爬虫被禁时，关闭爬虫
