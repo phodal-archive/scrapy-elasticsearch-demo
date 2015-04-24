@@ -18,7 +18,8 @@ for line in file.readlines():
     data["shop_tel"] = re.sub(" +", ",", data["shop_tel"])
     data["shop_tel"] = data["shop_tel"].encode("utf8").replace("电话：", "").split(",")[1:]
 
-    data["location"] = re.sub(" +", ",", data["location"])
+    data["location"] = re.sub(" +", ",", data["location"]).split(",")
+    data["location"] = data["location"][1] + "," + data["location"][0]
 
     data["shop_tags"] = re.sub("\(\d+\)", "", data["shop_tags"])
     data["shop_tags"] = re.sub(" +", ",", data["shop_tags"])
