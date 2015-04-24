@@ -1,6 +1,8 @@
+#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 import re
 from scrapy import Selector
+from scrapy.contrib.closespider import CloseSpider
 
 from scrapy.contrib.linkextractors import LinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
@@ -39,28 +41,29 @@ class DpshopsSpider(CrawlSpider):
         shop = ShopsItem()
         shop_url = response.url
         self.id += 1
-        shop['id'] = [self.id]
+        shop['id'] = str(self.id)
+
+        status_code = response.status
+        if status_code == 403:  #当爬虫被禁时，关闭爬虫
+            raise CloseSpider('========   SPIDER WAS FORBIDDEN  =========')
 
         htmlData = Selector(response)
 
+        shop['shop_name'] = response.xpath('//h1[@class="shop-name"]/text()').extract()
+        shop['street_address'] = response.xpath('//span[@itemprop="street-address"]/text()').extract()
+        shop['shop_tel'] = response.xpath(
+            '//p[@class="expand-info tel"]/span[text()="' + u"电话：" + '"]/..//text()[position()>1]').extract()
+        shop['open_time'] = response.xpath(
+            '//p[@class="info info-indent"]/span[text()="' + u"营业时间：" + '"]/..//text()[position()>1]').extract()
+        shop['shop_tags'] = response.xpath(
+            '//p[@class="info info-indent"]/span[text()="' + u"分类标签：" + '"]/..//text()[position()>1]').extract()
+        scripts = response.xpath('//script/text()').extract()
         shop['shop_dianping_url'] = [shop_url]
         shop['shop_city'] = response.xpath("//div[@class='breadcrumb']/a[1]/text()").extract()
         shop['shop_district'] = response.xpath("//div[@class='breadcrumb']/a[2]/text()").extract()
         shop['shop_region'] = response.xpath("//div[@class='breadcrumb']/a[3]/text()").extract()
         shop['shop_category'] = response.xpath("//div[@class='breadcrumb']/a[4]/text()").extract()
 
-        shop_names = htmlData.xpath('//h1[@class="shop-name"]/text()').extract()
-        street_addresses = htmlData.xpath('//span[@itemprop="street-address"]/text()').extract()
-        shop_tels = htmlData.xpath('//p[@class="expand-info tel"]/span[text()="' + u"电话：" + '"]/..//text()[position()>1]').extract()
-        open_times = htmlData.xpath(('//p[@class="info info-indent"]/span[text()="' + u"营业时间：" + '"]/..//text()[position()>1]')).extract()
-        shop_tags = htmlData.xpath('//p[@class="info info-indent"]/span[text()="' + u"分类标签：" + '"]/..//text()[position()>1]').extract()
-        scripts = htmlData.xpath('//script/text()').extract()
-
-        shop['shop_name'] = str(shop_names[0].encode('utf8')).replace("\n",' ').strip("\"").strip() if len(shop_names)>0 else ''
-        shop['street_address'] = str(street_addresses[0].encode('utf8')).replace("\n",' ').strip("\"").strip() if len(street_addresses)>0 else ''
-        shop['shop_tel'] = str(shop_tels[0].encode('utf8')).replace("\n",' ').strip("\"").strip() if len(shop_tels)>0 else ''
-        shop['open_time'] = str(open_times[0].encode('utf8')).replace("\n",' ').strip("\"").strip() if len(open_times)>0 else ''
-        shop['shop_tag'] = str(shop_tags[0].encode('utf8')).replace("\n",' ').strip("\"").strip() if len(shop_tags)>0 else ''
 
         pat = re.compile('lng:[0-9.]+,lat:[0-9.]+')
         latAndLngList = [pat.findall(src)[0] for src in scripts if pat.findall(src)]

@@ -1,12 +1,9 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+#!/usr/local/bin/python
+# -*- coding: utf-8 -*-
 
 from scrapy.exceptions import DropItem
 from pyelasticsearch import ElasticSearch
 
-es = ElasticSearch('http://localhost:9200/')
 import codecs
 import json
 
@@ -21,7 +18,6 @@ class DianpingPipeline(object):
             v = ' '.join(v).strip('\r\n').strip('\n').strip().replace('\r\n', ' ').replace('\n', ' ')
             t[k] = v
         line = json.dumps(t) + '\n'
-        es.index('dianping', 'food', line)
         self.file.write(line.decode("unicode_escape"))
         return item
 
