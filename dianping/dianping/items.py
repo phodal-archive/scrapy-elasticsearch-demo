@@ -19,6 +19,7 @@ class DianpingItem(Item):
 class ShopsItem(Item):
     # define the fields for your item here like:
     # name = Field()
+    id = Field()
     shop_name = Field()
     street_address = Field()
     shop_tags = Field()
@@ -30,5 +31,4 @@ class ShopsItem(Item):
     shop_tel = Field()
     open_time = Field()
     shop_tag = Field()
-    shop_lat = Field()
-    shop_lng = Field()
+    location = Field()
