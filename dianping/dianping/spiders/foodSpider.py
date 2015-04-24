@@ -11,7 +11,7 @@ from dianping.items import ShopsItem
 
 
 class DpshopsSpider(CrawlSpider):
-    name = 'dpshops'
+    name = 'food'
     allowed_domains = ['dianping.com']
     website = 'http://www.dianping.com'
     start_urls = [

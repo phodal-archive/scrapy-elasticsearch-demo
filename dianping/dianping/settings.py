@@ -12,7 +12,7 @@ SPIDER_MODULES = ['dianping.spiders']
 NEWSPIDER_MODULE = 'dianping.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'iamspider (+http://www.yourdomain.com)'
+USER_AGENT = 'googlebot/2.1; +http://www.google.com/bot.html)'
 DOWNLOADER_MIDDLEWARES = {
         'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware' : None,
         'dianping.spiders.rotateAgent.RotateUserAgentMiddleware' :400
