@@ -1,5 +1,6 @@
 #!/usr/local/bin/python
 # -*-coding:utf8-*-
+
 from scrapy.contrib.downloadermiddleware.useragent import UserAgentMiddleware
 import random
 
