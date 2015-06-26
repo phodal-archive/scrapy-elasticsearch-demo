@@ -1,0 +1,2 @@
+scrapy==1.0
+pyelasticsearch==1.4.0
